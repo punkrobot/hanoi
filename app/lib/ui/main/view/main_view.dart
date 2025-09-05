@@ -5,6 +5,7 @@ import 'package:app/ui/main/view_model/main_state.dart';
 import 'package:app/ui/main/widgets/hanoi_game_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_confetti/flutter_confetti.dart';
 
 class MainView extends StatelessWidget {
   const MainView({super.key});
@@ -21,6 +22,10 @@ class MainView extends StatelessWidget {
               context,
             ).showSnackBar(SnackBar(content: Text(state.error)));
             context.read<MainCubit>().resetError();
+          }
+
+          if (state.isManuallyCompleted) {
+            _triggerConfetti(context);
           }
         },
         builder: (context, state) {
@@ -101,7 +106,31 @@ class MainView extends StatelessWidget {
                               ),
                             ),
                           ],
-                        ] else
+                        ] else if (state.isGameCompleted &&
+                            state.playbackState == PlaybackState.idle)
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.green.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.green, width: 2),
+                            ),
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 8),
+                                Text(
+                                  '🎉  Puzzle Solved!  🎉',
+                                  style: Theme.of(context).textTheme.titleLarge
+                                      ?.copyWith(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          )
+                        else
                           Text(
                             "Drag disks to play manually or get solution",
                             style: Theme.of(context).textTheme.bodyLarge,
@@ -116,6 +145,13 @@ class MainView extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  void _triggerConfetti(BuildContext context) {
+    Confetti.launch(
+      context,
+      options: const ConfettiOptions(particleCount: 100, spread: 85, y: 0.7),
     );
   }
 }

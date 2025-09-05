@@ -11,6 +11,7 @@ class MainState {
   final PlaybackState playbackState;
   final int currentMoveIndex;
   final String currentMoveDescription;
+  final bool isGameCompleted;
 
   const MainState({
     required this.disks,
@@ -21,6 +22,7 @@ class MainState {
     this.playbackState = PlaybackState.idle,
     this.currentMoveIndex = 0,
     this.currentMoveDescription = "",
+    this.isGameCompleted = false,
   });
 
   static MainState initial = MainState(
@@ -53,6 +55,7 @@ class MainState {
     PlaybackState? playbackState,
     int? currentMoveIndex,
     String? currentMoveDescription,
+    bool? isGameCompleted,
   }) {
     return MainState(
       towers: towers ?? this.towers,
@@ -63,6 +66,14 @@ class MainState {
       playbackState: playbackState ?? this.playbackState,
       currentMoveIndex: currentMoveIndex ?? this.currentMoveIndex,
       currentMoveDescription: currentMoveDescription ?? this.currentMoveDescription,
+      isGameCompleted: isGameCompleted ?? this.isGameCompleted,
     );
+  }
+
+  bool get isManuallyCompleted {
+    // Check if all disks are on tower C (index 2) and game is completed
+    return isGameCompleted && 
+           towers[2].length == disks && 
+           playbackState == PlaybackState.idle;
   }
 }
