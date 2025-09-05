@@ -51,6 +51,24 @@ class MainCubit extends Cubit<MainState> {
         currentMoveIndex: 0,
         currentMoveDescription: "",
         isGameCompleted: false,
+        manualMoveCount: 0,
+      ),
+    );
+  }
+
+  void updateDiskCount(int newDiskCount) {
+    _stopPlayback();
+    emit(
+      state.copyWith(
+        disks: newDiskCount,
+        towers: MainState.getInitialTowers(newDiskCount),
+        solution: Solution(0, 0, []),
+        error: "",
+        playbackState: PlaybackState.idle,
+        currentMoveIndex: 0,
+        currentMoveDescription: "",
+        isGameCompleted: false,
+        manualMoveCount: 0,
       ),
     );
   }
@@ -76,7 +94,11 @@ class MainCubit extends Cubit<MainState> {
 
     bool gameCompleted = _isGameCompleted(newTowers);
 
-    emit(state.copyWith(towers: newTowers, isGameCompleted: gameCompleted));
+    emit(state.copyWith(
+      towers: newTowers, 
+      isGameCompleted: gameCompleted,
+      manualMoveCount: state.manualMoveCount + 1,
+    ));
   }
 
   bool _isGameCompleted(List<List<int>> towers) {

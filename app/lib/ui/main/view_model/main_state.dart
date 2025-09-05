@@ -12,6 +12,7 @@ class MainState {
   final int currentMoveIndex;
   final String currentMoveDescription;
   final bool isGameCompleted;
+  final int manualMoveCount;
 
   const MainState({
     required this.disks,
@@ -23,6 +24,7 @@ class MainState {
     this.currentMoveIndex = 0,
     this.currentMoveDescription = "",
     this.isGameCompleted = false,
+    this.manualMoveCount = 0,
   });
 
   static MainState initial = MainState(
@@ -56,6 +58,7 @@ class MainState {
     int? currentMoveIndex,
     String? currentMoveDescription,
     bool? isGameCompleted,
+    int? manualMoveCount,
   }) {
     return MainState(
       towers: towers ?? this.towers,
@@ -67,6 +70,7 @@ class MainState {
       currentMoveIndex: currentMoveIndex ?? this.currentMoveIndex,
       currentMoveDescription: currentMoveDescription ?? this.currentMoveDescription,
       isGameCompleted: isGameCompleted ?? this.isGameCompleted,
+      manualMoveCount: manualMoveCount ?? this.manualMoveCount,
     );
   }
 
@@ -76,4 +80,6 @@ class MainState {
            towers[2].length == disks && 
            playbackState == PlaybackState.idle;
   }
+
+  int get minimumMoves => (1 << disks) - 1;
 }

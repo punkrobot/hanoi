@@ -28,7 +28,7 @@ class DiskWidget extends StatelessWidget {
     ];
 
     final double baseWidth = 40.0;
-    final double maxWidth = 140.0;
+    final double maxWidth = 125.0;
     final double diskWidth =
         baseWidth + (maxWidth - baseWidth) * (size / totalDisks);
 
@@ -38,29 +38,31 @@ class DiskWidget extends StatelessWidget {
         width: diskWidth,
         height: 20,
         decoration: BoxDecoration(
-          color: isPlaceholder 
+          color: isPlaceholder
               ? colors[(size - 1) % colors.length].withOpacity(0.3)
               : colors[(size - 1) % colors.length],
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isDragging 
-                ? Colors.white
-                : Colors.white.withOpacity(0.3), 
-            width: isDragging ? 2 : 1
+            color: isDragging ? Colors.white : Colors.white.withOpacity(0.3),
+            width: isDragging ? 2 : 1,
           ),
-          boxShadow: isDragging ? [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ] : null,
+          boxShadow: isDragging
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
         ),
         child: Center(
           child: Text(
             size.toString(),
             style: TextStyle(
-              color: isPlaceholder ? Colors.white.withOpacity(0.5) : Colors.white,
+              color: isPlaceholder
+                  ? Colors.white.withOpacity(0.5)
+                  : Colors.white,
               fontWeight: FontWeight.bold,
               fontSize: 12,
             ),

@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:app/ui/main/widgets/base_widget.dart';
 import 'package:app/ui/main/widgets/disk_widget.dart';
 import 'package:app/ui/main/widgets/peg_widget.dart';
-import 'package:app/ui/main/widgets/base_widget.dart';
+import 'package:flutter/material.dart';
 
 class HanoiGameWidget extends StatefulWidget {
   final int numberOfDisks;
@@ -28,7 +28,7 @@ class _HanoiGameWidgetState extends State<HanoiGameWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(left: 16, bottom: 80, right: 16, top: 16),
       child: Column(
         children: [
           Expanded(
@@ -57,8 +57,9 @@ class _HanoiGameWidgetState extends State<HanoiGameWidget> {
   }
 
   Widget _buildTower(BuildContext context, int towerIndex, String label) {
-    bool isValidDropZone = draggedTower != null && 
-        draggedTower != towerIndex && 
+    bool isValidDropZone =
+        draggedTower != null &&
+        draggedTower != towerIndex &&
         widget.canMoveDisk?.call(draggedTower!, towerIndex) == true;
     bool isHovered = hoveredTower == towerIndex;
 
@@ -92,13 +93,13 @@ class _HanoiGameWidgetState extends State<HanoiGameWidget> {
               border: isValidDropZone
                   ? Border.all(color: Colors.green, width: 2)
                   : isHovered && draggedTower != null
-                      ? Border.all(color: Colors.red, width: 2)
-                      : null,
+                  ? Border.all(color: Colors.red, width: 2)
+                  : null,
               color: isValidDropZone && isHovered
                   ? Colors.green.withOpacity(0.1)
                   : isHovered && draggedTower != null
-                      ? Colors.red.withOpacity(0.1)
-                      : null,
+                  ? Colors.red.withOpacity(0.1)
+                  : null,
             ),
             child: Stack(
               alignment: Alignment.bottomCenter,
@@ -107,10 +108,11 @@ class _HanoiGameWidgetState extends State<HanoiGameWidget> {
                 ...widget.towers[towerIndex].asMap().entries.map((entry) {
                   int diskIndex = entry.key;
                   int diskSize = entry.value;
-                  bool isTopDisk = diskIndex == widget.towers[towerIndex].length - 1;
-                  
+                  bool isTopDisk =
+                      diskIndex == widget.towers[towerIndex].length - 1;
+
                   return Positioned(
-                    bottom: diskIndex * 25.0,
+                    bottom: diskIndex * 22.0,
                     child: isTopDisk
                         ? Draggable<int>(
                             data: towerIndex,
