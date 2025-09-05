@@ -29,7 +29,7 @@ class MainView extends StatelessWidget {
             body: Column(
               children: [
                 Expanded(
-                  flex: 3,
+                  flex: 2,
                   child: HanoiGameWidget(
                     numberOfDisks: state.disks,
                     towers: state.towers,
@@ -57,25 +57,55 @@ class MainView extends StatelessWidget {
                               child: const Text('New Game'),
                             ),
                             ElevatedButton(
-                              onPressed: () {
-                                context.read<MainCubit>().solveHanoi();
-                              },
-                              child: const Text('Solve'),
+                              onPressed:
+                                  state.playbackState == PlaybackState.idle
+                                  ? () {
+                                      context.read<MainCubit>().solveHanoi();
+                                    }
+                                  : null,
+                              child: const Text('Auto Solve'),
                             ),
                           ],
                         ),
                         const SizedBox(height: 16),
                         if (state.isLoading)
                           const CircularProgressIndicator()
-                        else if (state.solution.moves.isNotEmpty)
+                        else if (state.solution.moves.isNotEmpty) ...[
+                          if (state.currentMoveDescription.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.surfaceContainerHighest,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "Move ${state.currentMoveIndex}/${state.solution.movesCount}",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodySmall,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    state.currentMoveDescription,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ] else
                           Text(
-                            "Solution found: ${state.solution.movesCount} moves",
-                            style: Theme.of(context).textTheme.titleMedium,
-                          )
-                        else
-                          Text(
-                            "Press a button to solve the puzzle",
+                            "Drag disks to play manually or get solution",
                             style: Theme.of(context).textTheme.bodyLarge,
+                            textAlign: TextAlign.center,
                           ),
                       ],
                     ),

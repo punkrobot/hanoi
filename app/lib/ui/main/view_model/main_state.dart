@@ -1,11 +1,16 @@
 import 'package:app/domain/models/solution.dart';
 
+enum PlaybackState { idle, playing, paused, completed }
+
 class MainState {
   final int disks;
   final List<List<int>> towers;
   final Solution solution;
   final String error;
   final bool isLoading;
+  final PlaybackState playbackState;
+  final int currentMoveIndex;
+  final String currentMoveDescription;
 
   const MainState({
     required this.disks,
@@ -13,6 +18,9 @@ class MainState {
     required this.solution,
     required this.error,
     required this.isLoading,
+    this.playbackState = PlaybackState.idle,
+    this.currentMoveIndex = 0,
+    this.currentMoveDescription = "",
   });
 
   static MainState initial = MainState(
@@ -42,6 +50,9 @@ class MainState {
     Solution? solution,
     String? error,
     bool? isLoading,
+    PlaybackState? playbackState,
+    int? currentMoveIndex,
+    String? currentMoveDescription,
   }) {
     return MainState(
       towers: towers ?? this.towers,
@@ -49,6 +60,9 @@ class MainState {
       solution: solution ?? this.solution,
       error: error ?? this.error,
       isLoading: isLoading ?? this.isLoading,
+      playbackState: playbackState ?? this.playbackState,
+      currentMoveIndex: currentMoveIndex ?? this.currentMoveIndex,
+      currentMoveDescription: currentMoveDescription ?? this.currentMoveDescription,
     );
   }
 }

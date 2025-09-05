@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:app/ui/main/widgets/disk_widget.dart';
+import 'package:app/ui/main/widgets/peg_widget.dart';
+import 'package:app/ui/main/widgets/base_widget.dart';
 
 class HanoiGameWidget extends StatefulWidget {
   final int numberOfDisks;
@@ -39,7 +42,7 @@ class _HanoiGameWidgetState extends State<HanoiGameWidget> {
               ],
             ),
           ),
-          _buildBase(),
+          const BaseWidget(),
           SizedBox(
             height: 30,
             child: Row(
@@ -100,7 +103,7 @@ class _HanoiGameWidgetState extends State<HanoiGameWidget> {
             child: Stack(
               alignment: Alignment.bottomCenter,
               children: [
-                _buildPeg(),
+                const PegWidget(),
                 ...widget.towers[towerIndex].asMap().entries.map((entry) {
                   int diskIndex = entry.key;
                   int diskSize = entry.value;
@@ -147,99 +150,6 @@ class _HanoiGameWidgetState extends State<HanoiGameWidget> {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildPeg() {
-    return Container(
-      width: 8,
-      height: 200,
-      decoration: BoxDecoration(
-        color: Colors.grey[600],
-        borderRadius: BorderRadius.circular(4),
-      ),
-    );
-  }
-
-  Widget _buildBase() {
-    return Container(
-      height: 20,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.grey[700],
-        borderRadius: BorderRadius.circular(10),
-      ),
-    );
-  }
-}
-
-class DiskWidget extends StatelessWidget {
-  final int size;
-  final int totalDisks;
-  final VoidCallback? onTap;
-  final bool isDragging;
-  final bool isPlaceholder;
-
-  const DiskWidget({
-    super.key,
-    required this.size,
-    required this.totalDisks,
-    this.onTap,
-    this.isDragging = false,
-    this.isPlaceholder = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = [
-      Colors.pink[300]!,
-      Colors.yellow[600]!,
-      Colors.green[400]!,
-      Colors.orange[400]!,
-      Colors.blue[400]!,
-      Colors.teal[400]!,
-    ];
-
-    final double baseWidth = 40.0;
-    final double maxWidth = 140.0;
-    final double diskWidth =
-        baseWidth + (maxWidth - baseWidth) * (size / totalDisks);
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: diskWidth,
-        height: 20,
-        decoration: BoxDecoration(
-          color: isPlaceholder 
-              ? colors[(size - 1) % colors.length].withOpacity(0.3)
-              : colors[(size - 1) % colors.length],
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: isDragging 
-                ? Colors.white
-                : Colors.white.withOpacity(0.3), 
-            width: isDragging ? 2 : 1
-          ),
-          boxShadow: isDragging ? [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ] : null,
-        ),
-        child: Center(
-          child: Text(
-            size.toString(),
-            style: TextStyle(
-              color: isPlaceholder ? Colors.white.withOpacity(0.5) : Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
-          ),
-        ),
       ),
     );
   }

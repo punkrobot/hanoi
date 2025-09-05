@@ -20,7 +20,14 @@ class HanoiSolverRepository {
           success.disks,
           success.movesCount,
           success.moves
-              .map((m) => Move(m.description, m.disk, m.from, m.to))
+              .map((m) => Move(
+                    m.description, 
+                    m.disk, 
+                    m.from, 
+                    m.to, 
+                    _parseTowerName(m.from), 
+                    _parseTowerName(m.to)
+                  ))
               .toList(),
         ),
       ),
@@ -29,5 +36,14 @@ class HanoiSolverRepository {
         Exception("An error ocurred, please try again later."),
       ),
     );
+  }
+
+  int _parseTowerName(String towerName) {
+    switch (towerName.toUpperCase()) {
+      case 'A': return 0;
+      case 'B': return 1;
+      case 'C': return 2;
+      default: return 0;
+    }
   }
 }

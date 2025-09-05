@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app/domain/models/solution.dart';
 import 'package:app/domain/usecases/solve_hanoi_usecase.dart';
 import 'package:app/ui/main/view_model/main_state.dart';
@@ -10,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 //
 class MainCubit extends Cubit<MainState> {
   final SolveHanoiUseCase solveHanoiUseCase;
+  Timer? _playbackTimer;
 
   MainCubit({required this.solveHanoiUseCase}) : super(MainState.initial);
 
@@ -22,7 +25,11 @@ class MainCubit extends Cubit<MainState> {
     final result = await solveHanoiUseCase(state.disks);
 
     result.fold(
-      (success) => emit(state.copyWith(isLoading: false, solution: success)),
+      (success) {
+        emit(state.copyWith(isLoading: false, solution: success));
+        // Auto-start playback immediately after solution is loaded
+        startSolutionPlayback();
+      },
       (error) =>
           emit(state.copyWith(isLoading: false, error: error.toString())),
     );
@@ -33,12 +40,16 @@ class MainCubit extends Cubit<MainState> {
   }
 
   void resetGame() {
+    _stopPlayback();
     emit(
       state.copyWith(
         disks: state.disks,
         towers: MainState.getInitialTowers(state.disks),
         solution: Solution(0, 0, []),
         error: "",
+        playbackState: PlaybackState.idle,
+        currentMoveIndex: 0,
+        currentMoveDescription: "",
       ),
     );
   }
@@ -63,5 +74,76 @@ class MainCubit extends Cubit<MainState> {
     newTowers[toTower].add(disk);
 
     emit(state.copyWith(towers: newTowers));
+  }
+
+  void startSolutionPlayback() {
+    if (state.solution.moves.isEmpty) return;
+
+    // Reset to initial state
+    emit(
+      state.copyWith(
+        towers: MainState.getInitialTowers(state.disks),
+        playbackState: PlaybackState.playing,
+        currentMoveIndex: 0,
+        currentMoveDescription: "",
+      ),
+    );
+
+    _startPlaybackTimer();
+  }
+
+  void _startPlaybackTimer() {
+    _playbackTimer = Timer.periodic(const Duration(milliseconds: 1000), (
+      timer,
+    ) {
+      _executeNextMove();
+    });
+  }
+
+  void _stopPlayback() {
+    _playbackTimer?.cancel();
+    _playbackTimer = null;
+  }
+
+  void _executeNextMove() {
+    if (state.currentMoveIndex >= state.solution.moves.length) {
+      _stopPlayback();
+      emit(
+        state.copyWith(
+          playbackState: PlaybackState.completed,
+          currentMoveDescription: "Solution completed!",
+        ),
+      );
+      return;
+    }
+
+    final move = state.solution.moves[state.currentMoveIndex];
+
+    int fromTower = move.fromIndex;
+    int toTower = move.toIndex;
+
+    // Execute the move
+    List<List<int>> newTowers = state.towers
+        .map((tower) => List<int>.from(tower))
+        .toList();
+
+    if (newTowers[fromTower].isNotEmpty) {
+      int disk = newTowers[fromTower].removeLast();
+      newTowers[toTower].add(disk);
+    }
+
+    emit(
+      state.copyWith(
+        towers: newTowers,
+        currentMoveIndex: state.currentMoveIndex + 1,
+        currentMoveDescription: move.description,
+      ),
+    );
+  }
+
+  @override
+  Future<void> close() {
+    _stopPlayback();
+    return super.close();
   }
 }
