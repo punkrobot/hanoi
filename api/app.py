@@ -7,8 +7,8 @@ CORS(app)
 
 @app.route('/api/hanoi/<int:n>', methods=['GET'])
 def get_hanoi_solution(n):
-    if n < 1 or n > 10:
-        return jsonify({'error': 'Number of disks must be between 1 and 10'}), 400
+    if n < 1 or n > 12:
+        return jsonify({'error': 'Number of disks must be between 1 and 12'}), 400
     
     moves = solve_hanoi(n, 'A', 'C', 'B')
     

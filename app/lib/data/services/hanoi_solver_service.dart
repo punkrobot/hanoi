@@ -1,5 +1,6 @@
 import 'package:app/data/models/solution_api.dart';
 import 'package:app/data/services/network/hanoi_solver_rest_client.dart';
+import 'package:dio/dio.dart';
 import 'package:result_dart/result_dart.dart';
 
 class HanoiSolverService {
@@ -14,6 +15,9 @@ class HanoiSolverService {
       final result = await _hanoiSolverRestClient.solveHanoi(disks);
       return Success(result);
     } catch (e) {
+      if (e is DioException && e.response?.statusCode == 400) {
+        return Failure(Exception('400: ${e.message}'));
+      }
       return Failure(Exception(e));
     }
   }

@@ -28,7 +28,7 @@ class _HanoiGameWidgetState extends State<HanoiGameWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 16, bottom: 80, right: 16, top: 16),
+      padding: const EdgeInsets.only(left: 16, bottom: 60, right: 16, top: 16),
       child: Column(
         children: [
           Expanded(
@@ -104,7 +104,7 @@ class _HanoiGameWidgetState extends State<HanoiGameWidget> {
             child: Stack(
               alignment: Alignment.bottomCenter,
               children: [
-                const PegWidget(),
+                PegWidget(disks: widget.numberOfDisks),
                 ...widget.towers[towerIndex].asMap().entries.map((entry) {
                   int diskIndex = entry.key;
                   int diskSize = entry.value;

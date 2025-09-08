@@ -1,8 +1,10 @@
 import 'package:app/config/dependency_injection.dart';
 import 'package:app/domain/usecases/solve_hanoi_usecase.dart';
+import 'package:app/ui/extensions/number_extensions.dart';
 import 'package:app/ui/main/view_model/main_cubit.dart';
 import 'package:app/ui/main/view_model/main_state.dart';
 import 'package:app/ui/main/widgets/hanoi_game_widget.dart';
+import 'package:app/ui/main/widgets/info_modal.dart';
 import 'package:app/ui/main/widgets/settings_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +36,10 @@ class MainView extends StatelessWidget {
             appBar: AppBar(
               title: const Text('Towers of Hanoi'),
               actions: [
+                IconButton(
+                  onPressed: () => InfoModal.show(context),
+                  icon: const Icon(Icons.info_outline),
+                ),
                 IconButton(
                   onPressed: () => SettingsModal.show(context),
                   icon: const Icon(Icons.settings),
@@ -80,9 +86,22 @@ class MainView extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(
-                                "Move ${state.currentMoveIndex}/${state.solution.movesCount}",
+                                "Move ${state.currentMoveIndex.withCommas} / ${state.solution.movesCount.withCommas}",
                                 style: Theme.of(context).textTheme.bodySmall,
                               ),
+                              if (state.estimatedCompletionTime.isNotEmpty) ...[
+                                const SizedBox(height: 2),
+                                Text(
+                                  state.estimatedCompletionTime,
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                ),
+                              ],
                               const SizedBox(height: 4),
                               Text(
                                 state.currentMoveDescription,
@@ -113,7 +132,7 @@ class MainView extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                "Moves: ${state.manualMoveCount} / Minimum: ${state.minimumMoves}",
+                                "Moves: ${state.manualMoveCount.withCommas} / Minimum: ${state.minimumMoves.withCommas}",
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 textAlign: TextAlign.center,
                               ),
@@ -130,7 +149,7 @@ class MainView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            "Moves: ${state.manualMoveCount} / Minimum: ${state.minimumMoves}",
+                            "Moves: ${state.manualMoveCount.withCommas} / Minimum: ${state.minimumMoves.withCommas}",
                             style: Theme.of(context).textTheme.bodyMedium,
                             textAlign: TextAlign.center,
                           ),

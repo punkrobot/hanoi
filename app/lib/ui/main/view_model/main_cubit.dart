@@ -73,6 +73,28 @@ class MainCubit extends Cubit<MainState> {
     );
   }
 
+  void updateAnimationSpeed(int newAnimationSpeedMs) {
+    emit(state.copyWith(animationSpeedMs: newAnimationSpeedMs));
+  }
+
+  void updateSettings({int? diskCount, int? animationSpeedMs}) {
+    _stopPlayback();
+    emit(
+      state.copyWith(
+        disks: diskCount ?? state.disks,
+        towers: diskCount != null ? MainState.getInitialTowers(diskCount) : state.towers,
+        solution: diskCount != null ? Solution(0, 0, []) : state.solution,
+        error: "",
+        playbackState: PlaybackState.idle,
+        currentMoveIndex: diskCount != null ? 0 : state.currentMoveIndex,
+        currentMoveDescription: diskCount != null ? "" : state.currentMoveDescription,
+        isGameCompleted: diskCount != null ? false : state.isGameCompleted,
+        manualMoveCount: diskCount != null ? 0 : state.manualMoveCount,
+        animationSpeedMs: animationSpeedMs ?? state.animationSpeedMs,
+      ),
+    );
+  }
+
   bool canMoveDisk(int fromTower, int toTower) {
     if (fromTower == toTower) return false;
     if (state.towers[fromTower].isEmpty) return false;
@@ -94,11 +116,13 @@ class MainCubit extends Cubit<MainState> {
 
     bool gameCompleted = _isGameCompleted(newTowers);
 
-    emit(state.copyWith(
-      towers: newTowers, 
-      isGameCompleted: gameCompleted,
-      manualMoveCount: state.manualMoveCount + 1,
-    ));
+    emit(
+      state.copyWith(
+        towers: newTowers,
+        isGameCompleted: gameCompleted,
+        manualMoveCount: state.manualMoveCount + 1,
+      ),
+    );
   }
 
   bool _isGameCompleted(List<List<int>> towers) {
@@ -128,9 +152,7 @@ class MainCubit extends Cubit<MainState> {
   }
 
   void _startPlaybackTimer() {
-    _playbackTimer = Timer.periodic(const Duration(milliseconds: 1000), (
-      timer,
-    ) {
+    _playbackTimer = Timer.periodic(Duration(milliseconds: state.animationSpeedMs), (timer) {
       _executeNextMove();
     });
   }

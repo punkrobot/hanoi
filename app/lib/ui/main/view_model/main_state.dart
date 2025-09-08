@@ -13,6 +13,7 @@ class MainState {
   final String currentMoveDescription;
   final bool isGameCompleted;
   final int manualMoveCount;
+  final int animationSpeedMs;
 
   const MainState({
     required this.disks,
@@ -25,6 +26,7 @@ class MainState {
     this.currentMoveDescription = "",
     this.isGameCompleted = false,
     this.manualMoveCount = 0,
+    this.animationSpeedMs = 300,
   });
 
   static MainState initial = MainState(
@@ -59,6 +61,7 @@ class MainState {
     String? currentMoveDescription,
     bool? isGameCompleted,
     int? manualMoveCount,
+    int? animationSpeedMs,
   }) {
     return MainState(
       towers: towers ?? this.towers,
@@ -71,6 +74,7 @@ class MainState {
       currentMoveDescription: currentMoveDescription ?? this.currentMoveDescription,
       isGameCompleted: isGameCompleted ?? this.isGameCompleted,
       manualMoveCount: manualMoveCount ?? this.manualMoveCount,
+      animationSpeedMs: animationSpeedMs ?? this.animationSpeedMs,
     );
   }
 
@@ -82,4 +86,33 @@ class MainState {
   }
 
   int get minimumMoves => (1 << disks) - 1;
+  
+  String get estimatedCompletionTime {
+    if (playbackState != PlaybackState.playing) return "";
+    
+    int remainingMoves = solution.movesCount - currentMoveIndex;
+    int totalTimeMs = remainingMoves * animationSpeedMs;
+    
+    if (totalTimeMs < 1000) {
+      return "~${(totalTimeMs / 1000).toStringAsFixed(1)}s remaining";
+    } else if (totalTimeMs < 60000) {
+      return "~${(totalTimeMs / 1000).round()}s remaining";
+    } else if (totalTimeMs < 3600000) { // Less than 1 hour
+      int minutes = (totalTimeMs / 60000).floor();
+      int seconds = ((totalTimeMs % 60000) / 1000).round();
+      return "~${minutes}m ${seconds}s remaining";
+    } else if (totalTimeMs < 86400000) { // Less than 1 day
+      int hours = (totalTimeMs / 3600000).floor();
+      int minutes = ((totalTimeMs % 3600000) / 60000).round();
+      return "~${hours}h ${minutes}m remaining";
+    } else if (totalTimeMs < 31536000000) { // Less than 1 year (365 days)
+      int days = (totalTimeMs / 86400000).floor();
+      int hours = ((totalTimeMs % 86400000) / 3600000).round();
+      return "~${days}d ${hours}h remaining";
+    } else {
+      int years = (totalTimeMs / 31536000000).floor();
+      int days = ((totalTimeMs % 31536000000) / 86400000).round();
+      return "~${years}y ${days}d remaining";
+    }
+  }
 }
