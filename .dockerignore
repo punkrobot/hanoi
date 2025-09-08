@@ -1,0 +1,75 @@
+# Git
+.git
+.gitignore
+README.md
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Flutter specific
+app/.dart_tool/
+app/.packages
+app/.pub-cache/
+app/.pub/
+app/build/android/
+app/build/ios/
+app/build/linux/
+app/build/macos/
+app/build/windows/
+# Keep app/build/web for Docker
+# app/build/web/
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+app/.metadata
+
+# Flutter iOS
+app/ios/Pods/
+app/ios/.symlinks/
+app/ios/Flutter/App.framework
+app/ios/Flutter/Flutter.framework
+app/ios/Flutter/Generated.xcconfig
+app/ios/Flutter/app.flx
+app/ios/Flutter/app.zip
+app/ios/Flutter/flutter_assets/
+app/ios/ServiceDefinitions.json
+app/ios/Runner/GeneratedPluginRegistrant.*
+
+# Flutter Android
+app/android/.gradle
+app/android/captures/
+app/android/gradlew
+app/android/gradlew.bat
+app/android/local.properties
+app/android/**/GeneratedPluginRegistrant.java
+
+# Python
+api/__pycache__/
+api/*.pyc
+api/*.pyo
+api/*.pyd
+api/.Python
+api/env/
+api/venv/
+api/.venv/
+api/ENV/
+api/env.bak/
+api/venv.bak/
+api/.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
