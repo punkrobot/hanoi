@@ -58,24 +58,24 @@ RUN echo 'server { \
 }' > /etc/nginx/sites-available/default
 
 # Create supervisor configuration
-RUN echo '[supervisord] \
-nodaemon=true \
-\
-[program:nginx] \
-command=nginx -g "daemon off;" \
-autostart=true \
-autorestart=true \
-stderr_logfile=/var/log/nginx.err.log \
-stdout_logfile=/var/log/nginx.out.log \
-\
-[program:flask] \
-command=python /app/api/app.py \
-directory=/app \
-autostart=true \
-autorestart=true \
-stderr_logfile=/var/log/flask.err.log \
-stdout_logfile=/var/log/flask.out.log \
-environment=FLASK_ENV=production' > /etc/supervisor/conf.d/supervisord.conf
+RUN echo '[supervisord]' > /etc/supervisor/conf.d/supervisord.conf && \
+    echo 'nodaemon=true' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo '' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo '[program:nginx]' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo 'command=nginx -g "daemon off;"' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo 'autostart=true' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo 'autorestart=true' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo 'stderr_logfile=/var/log/nginx.err.log' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo 'stdout_logfile=/var/log/nginx.out.log' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo '' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo '[program:flask]' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo 'command=python /app/api/app.py' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo 'directory=/app' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo 'autostart=true' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo 'autorestart=true' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo 'stderr_logfile=/var/log/flask.err.log' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo 'stdout_logfile=/var/log/flask.out.log' >> /etc/supervisor/conf.d/supervisord.conf && \
+    echo 'environment=FLASK_ENV=production' >> /etc/supervisor/conf.d/supervisord.conf
 
 # Expose port 80 for nginx
 EXPOSE 80
